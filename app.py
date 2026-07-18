@@ -431,22 +431,21 @@ else:
         
         page = first_doc.load_page(0)
         mat = fitz.Matrix(1.0, 1.0)
-        pix = page.get_pixmap(matrix=mat, alpha=False)
-        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        pix = page.get_pixmap(matrix=mat, alpha=True)
+        img_rgba = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
         
-        # Convert image to Base64 to bypass Streamlit Cloud media URL issues
-        import base64
-        import io
-        buffered = io.BytesIO()
-        img.save(buffered, format="PNG")
-        img_str = base64.b64encode(buffered.getvalue()).decode()
-        bg_b64 = f"data:image/png;base64,{img_str}"
+        # Force a white background (fixes black canvas on transparent PDFs)
+        img = Image.new("RGB", img_rgba.size, (255, 255, 255))
+        img.paste(img_rgba, mask=img_rgba.split()[3])
+        
+        # Prevent Streamlit Cloud from garbage collecting the image URL
+        st.session_state["_canvas_bg_image"] = img
         
         canvas_result = st_canvas(
             fill_color="rgba(255, 0, 0, 0.3)", # Translucent red fill
             stroke_width=2,
             stroke_color="#FF0000", # Red stroke
-            background_image=bg_b64,
+            background_image=st.session_state["_canvas_bg_image"],
             update_streamlit=True,
             height=img.height,
             width=img.width,
