@@ -355,6 +355,9 @@ with st.sidebar:
         hex_color = st.color_picker(t["fill_color"], default_hex)
         replacement_img = st.file_uploader(t["upload_replacement"], type=['png', 'jpg', 'jpeg'], key="rep_logo")
 
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: gray; font-size: 0.8em;'>built by campingroom —</p>", unsafe_allow_html=True)
+
 if not uploaded_files:
     st.info("👈 Please upload a PDF file from the sidebar to get started. / กรุณาอัปโหลดไฟล์ PDF จากเมนูด้านซ้ายเพื่อเริ่มต้นใช้งาน")
 else:
