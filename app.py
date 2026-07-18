@@ -476,3 +476,6 @@ else:
                     if preview:
                         st.write(f"### {t['preview_header']}")
                         st.image(preview, use_container_width=True)
+
+st.markdown("---")
+st.markdown("<div style='text-align: center; color: gray; font-size: 0.8rem;'>built by campingroom —</div>", unsafe_allow_html=True)
