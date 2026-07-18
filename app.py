@@ -431,14 +431,17 @@ else:
         
         page = first_doc.load_page(0)
         mat = fitz.Matrix(1.0, 1.0)
-        pix = page.get_pixmap(matrix=mat)
+        pix = page.get_pixmap(matrix=mat, alpha=False)
         img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        
+        # Prevent Streamlit Cloud from garbage collecting the image URL
+        st.session_state["_canvas_bg_image"] = img
         
         canvas_result = st_canvas(
             fill_color="rgba(255, 0, 0, 0.3)", # Translucent red fill
             stroke_width=2,
             stroke_color="#FF0000", # Red stroke
-            background_image=img,
+            background_image=st.session_state["_canvas_bg_image"],
             update_streamlit=True,
             height=img.height,
             width=img.width,
